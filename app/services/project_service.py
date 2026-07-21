@@ -10,17 +10,30 @@ class ProjectService:
     def create_project(
         db: Session,
         project_name: str,
-        upload_path: str,
         current_user: User,
     ):
 
         project = Project(
             project_name=project_name,
-            upload_path=upload_path,
+            upload_path="",
             user_id=current_user.id,
         )
 
         db.add(project)
+        db.commit()
+        db.refresh(project)
+
+        return project
+
+    @staticmethod
+    def update_upload_path(
+        db: Session,
+        project: Project,
+        upload_path: str,
+    ):
+
+        project.upload_path = upload_path
+
         db.commit()
         db.refresh(project)
 
