@@ -10,6 +10,8 @@ from app.models.user import User
 from app.services.file_scanner import FileScanner
 from app.services.project_service import ProjectService
 
+from app.services.ast_parser import ASTParser
+
 router = APIRouter(
     prefix="/projects",
     tags=["Projects"],
@@ -95,3 +97,12 @@ async def upload_project(
             for file in python_files
         ],
     }
+
+@router.get("/ast-test")
+def ast_test():
+
+    file = Path(
+        "uploads/user_1/project_9/extracted/Sample/main.py"
+    )
+
+    return ASTParser.parse_file(file)
