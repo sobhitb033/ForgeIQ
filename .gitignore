@@ -1,25 +1,48 @@
-# Environment
-.env
-.venv/
-
 # Python
 __pycache__/
 *.py[cod]
-*.egg-info/
+*.pyo
+*.pyd
+
+# Virtual Environment
+.venv/
+venv/
+env/
 
 # IDE
 .vscode/
+.idea/
 
 # macOS
 .DS_Store
 
+# Environment Variables
+.env
+
 # Uploads
 uploads/
-reports/
-
-# Caches
-.pytest_cache/
-.mypy_cache/
 
 # Logs
 *.log
+
+# Database (if using SQLite)
+*.db
+*.sqlite3
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Build
+build/
+dist/
+*.egg-info/
