@@ -74,5 +74,6 @@ class UploadService:
                 "status": project.status,
                 "uploaded_at": project.uploaded_at,
             },
-            "analysis": analysis,
+            "summary": analysis["summary"],
+            "analysis": analysis["files"],
         }

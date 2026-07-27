@@ -4,6 +4,8 @@ from app.services.file_scanner import FileScanner
 from app.services.ast_parser import ASTParser
 from app.services.metrics_engine import MetricsEngine
 
+from app.services.project_summary import ProjectSummary
+
 
 class ProjectAnalyzer:
 
@@ -31,4 +33,9 @@ class ProjectAnalyzer:
                 }
             )
 
-        return analysis
+        summary = ProjectSummary.generate(analysis)
+
+        return {
+            "summary": summary,
+            "files": analysis
+        }
