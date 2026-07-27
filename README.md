@@ -407,4 +407,4 @@ Milestone 1 has been completed successfully. The project currently focuses on bu
 
 # License
 
-This project is currently under development and is intended for educational and research purposes.e
+This project is currently under development and is intended for educational and research purposes.
