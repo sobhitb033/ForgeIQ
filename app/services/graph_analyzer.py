@@ -1,20 +1,11 @@
+from app.services.graph_utils import GraphUtils
+
 class GraphAnalyzer:
 
     @staticmethod
     def analyze(graph: dict):
 
-        incoming = {}
-
-        for module in graph:
-            incoming[module] = 0
-
-        # Count incoming dependencies
-        for module, dependencies in graph.items():
-
-            for dependency in dependencies:
-
-                if dependency in incoming:
-                    incoming[dependency] += 1
+        incoming = GraphUtils.get_incoming_edges(graph)
 
         # Most connected module
         most_connected = max(
