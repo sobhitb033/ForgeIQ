@@ -75,5 +75,7 @@ class UploadService:
                 "uploaded_at": project.uploaded_at,
             },
             "summary": analysis["summary"],
+            "dependency_graph": analysis["dependency_graph"],
+            "graph_analysis": analysis["graph_analysis"],
             "analysis": analysis["files"],
         }

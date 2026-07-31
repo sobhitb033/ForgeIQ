@@ -6,6 +6,12 @@ from app.services.metrics_engine import MetricsEngine
 from app.services.dependency_analyzer import DependencyAnalyzer
 from app.services.project_summary import ProjectSummary
 
+from app.services.module_indexer import ModuleIndexer
+
+from app.services.dependency_graph_builder import DependencyGraphBuilder
+
+from app.services.graph_analyzer import GraphAnalyzer
+
 
 class ProjectAnalyzer:
 
@@ -13,6 +19,8 @@ class ProjectAnalyzer:
     def analyze_project(project_path: Path):
 
         python_files = FileScanner.find_python_files(project_path)
+        project_modules = ModuleIndexer.build(project_path)
+        print(project_modules)
 
         analysis = []
 
@@ -30,7 +38,8 @@ class ProjectAnalyzer:
             # Analyze dependencies
             dependencies = DependencyAnalyzer.analyze_file(
                 file,
-                ast_data
+                ast_data,
+                project_modules
             )
 
             analysis.append(
@@ -45,7 +54,17 @@ class ProjectAnalyzer:
         # Generate project summary
         summary = ProjectSummary.generate(analysis)
 
+        dependency_graph = DependencyGraphBuilder.build(
+            analysis
+        )
+
+        graph_analysis = GraphAnalyzer.analyze(
+            dependency_graph
+        )
+
         return {
             "summary": summary,
+            "dependency_graph": dependency_graph,
+            "graph_analysis": graph_analysis,
             "files": analysis,
         }
