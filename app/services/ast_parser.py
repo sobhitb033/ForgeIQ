@@ -1,6 +1,8 @@
 import ast
 from pathlib import Path
 
+from app.services.complexity_analyzer import ComplexityAnalyzer
+
 
 class ASTParser:
 
@@ -37,14 +39,14 @@ class ASTParser:
 
         classes = []
 
-        # Only iterate over top-level statements
+        # Only top-level classes
         for node in tree.body:
 
             if isinstance(node, ast.ClassDef):
 
                 methods = []
 
-                # Look only inside this class
+                # Only methods inside this class
                 for item in node.body:
 
                     if isinstance(item, (ast.FunctionDef, ast.AsyncFunctionDef)):
@@ -57,6 +59,17 @@ class ASTParser:
                             if isinstance(decorator, ast.Name):
                                 decorators.append(decorator.id)
 
+                        complexity = ComplexityAnalyzer.analyze(item)
+
+                        if complexity <= 5:
+                            risk = "Low"
+                        elif complexity <= 10:
+                            risk = "Moderate"
+                        elif complexity <= 20:
+                            risk = "High"
+                        else:
+                            risk = "Critical"
+
                         methods.append(
                             {
                                 "name": item.name,
@@ -66,6 +79,8 @@ class ASTParser:
                                 "is_async": isinstance(item, ast.AsyncFunctionDef),
                                 "docstring": ast.get_docstring(item),
                                 "line_number": item.lineno,
+                                "cyclomatic_complexity": complexity,
+                                "risk": risk,
                             }
                         )
 
@@ -109,6 +124,17 @@ class ASTParser:
                     if isinstance(decorator, ast.Name):
                         decorators.append(decorator.id)
 
+                complexity = ComplexityAnalyzer.analyze(node)
+
+                if complexity <= 5:
+                    risk = "Low"
+                elif complexity <= 10:
+                    risk = "Moderate"
+                elif complexity <= 20:
+                    risk = "High"
+                else:
+                    risk = "Critical"
+
                 functions.append(
                     {
                         "name": node.name,
@@ -118,6 +144,8 @@ class ASTParser:
                         "is_async": isinstance(node, ast.AsyncFunctionDef),
                         "docstring": ast.get_docstring(node),
                         "line_number": node.lineno,
+                        "cyclomatic_complexity": complexity,
+                        "risk": risk,
                     }
                 )
 
