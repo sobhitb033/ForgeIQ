@@ -1,5 +1,7 @@
 from app.services.graph_utils import GraphUtils
 
+from app.services.cycle_detector import CycleDetector
+
 class GraphAnalyzer:
 
     @staticmethod
@@ -26,5 +28,5 @@ class GraphAnalyzer:
             "most_connected_module": most_connected,
             "max_dependencies": len(graph.get(most_connected, [])),
             "orphan_modules": orphan_modules,
-            "circular_dependencies": []
+            "circular_dependencies": CycleDetector.find_cycles(graph)
         }
