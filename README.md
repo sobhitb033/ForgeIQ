@@ -1,138 +1,26 @@
 # ForgeIQ
 
-AI-powered software intelligence platform that analyzes software projects using Static Analysis, Machine Learning, and Large Language Models.
+> **AI-powered Software Intelligence Platform that understands software architecture before generating AI insights.**
 
----
+ForgeIQ is an intelligent software analysis platform designed to act as an **AI Software Architect** rather than a traditional AI coding assistant.
 
-## Features
+Instead of sending raw source code directly to a Large Language Model (LLM), ForgeIQ first performs comprehensive **static analysis** to understand the architecture, dependencies, complexity, maintainability, and overall quality of an entire software project.
 
-- User Authentication (JWT)
-- Secure Password Hashing
-- MySQL Database
-- SQLAlchemy ORM
-- Alembic Database Migrations
-- FastAPI REST API
-- Swagger Documentation
-
----
-
-## Tech Stack
-
-### Backend
-- FastAPI
-- SQLAlchemy
-- Alembic
-- MySQL
-- Pydantic
-
-### Authentication
-- JWT
-- Passlib
-- bcrypt
-
-### AI (Upcoming)
-- Python AST
-- NetworkX
-- Scikit-learn
-- Transformers
-- LLM Integration
-
----
-
-## Project Structure
-
-```text
-ForgeIQ/
-│
-├── alembic/
-├── app/
-│   ├── api/
-│   ├── core/
-│   ├── database/
-│   ├── dependencies/
-│   ├── models/
-│   ├── schemas/
-│   ├── services/
-│   └── main.py
-│
-├── docs/
-├── uploads/
-├── reports/
-├── tests/
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Completed
-
-- User Registration
-- User Login
-- JWT Authentication
-- Database Migrations
-- MySQL Integration
-
----
-
-## Upcoming
-
-- Protected Routes
-- Project Upload
-- Static Code Analysis
-- Dependency Graph
-- Engineering Priority Score
-- AI Code Review
-- Report Generation
-- Dashboard
-
----
-
-## Run
-
-```bash
-git clone <repo-url>
-
-cd ForgeIQ
-
-python -m venv .venv
-
-source .venv/bin/activate
-
-pip install -r requirements.txt
-
-uvicorn app.main:app --reload
-```
-
-Open:
-
-```
-http://127.0.0.1:8000/docs
-```
-
----
-
-MIT Licens# ForgeIQ
-
-> **An AI-powered Software Analysis Platform that understands software architecture before generating AI insights.**
-
-ForgeIQ is an intelligent software analysis platform designed to act as an **AI Software Architect** rather than a traditional AI chatbot. Instead of sending raw source code directly to a Large Language Model (LLM), ForgeIQ first performs comprehensive static analysis to understand the structure, architecture, and quality of an entire software project.
-
-The platform extracts project-level knowledge such as classes, functions, imports, dependencies, and software metrics, creating a structured understanding of the codebase before AI generates insights.
+The platform builds a structured understanding of a codebase before AI generates recommendations, enabling architecture-aware software engineering insights.
 
 ---
 
 # Vision
 
-Modern software projects contain hundreds of files and thousands of lines of code, making them increasingly difficult to understand and maintain.
+Modern software projects often contain hundreds of files and thousands of lines of code. While existing AI coding assistants excel at generating and explaining code, they typically operate on individual files or small code snippets.
 
-Existing AI coding assistants are excellent at generating and explaining code but primarily operate on individual files or small snippets.
+ForgeIQ bridges this gap by understanding an **entire software project** before involving AI.
 
-ForgeIQ aims to bridge this gap by understanding the **entire project** before involving AI, enabling architecture-aware recommendations, project summaries, dependency analysis, and software quality insights.
+Its goal is to become an **AI Software Architect** capable of reviewing complete projects, detecting design issues, analyzing architecture, identifying technical debt, and providing intelligent engineering recommendations.
 
 ---
 
-# Current Features (v0.1.0)
+# Current Features (v0.3.0)
 
 ## Authentication
 
@@ -140,6 +28,7 @@ ForgeIQ aims to bridge this gap by understanding the **entire project** before i
 - User Login
 - JWT Authentication
 - Secure Password Hashing
+- Protected API Routes
 
 ---
 
@@ -151,17 +40,17 @@ ForgeIQ aims to bridge this gap by understanding the **entire project** before i
 
 ---
 
-## File Analysis
+## File Discovery
 
-- Recursive Python File Discovery
+- Recursive Python File Scanner
 - Automatic File Filtering
-- Python AST Parsing
+- Project Module Indexing
 
 ---
 
 ## AST Analysis
 
-ForgeIQ currently extracts:
+ForgeIQ extracts detailed information from every Python file including:
 
 - Imports
 - Classes
@@ -191,9 +80,42 @@ For every Python file ForgeIQ calculates:
 
 ---
 
+## Dependency Analysis
+
+ForgeIQ automatically detects:
+
+- Internal Project Dependencies
+- External Library Dependencies
+- Module Dependency Graph
+- Circular Dependencies
+- Orphan Modules
+- Most Connected Modules
+
+---
+
+## Complexity Analysis
+
+For every function and method:
+
+- Cyclomatic Complexity
+- Risk Classification
+- Decision Point Analysis
+
+---
+
+## Maintainability Analysis
+
+For every Python file:
+
+- Maintainability Index
+- Maintainability Rating
+- Overall Maintainability Score
+
+---
+
 ## Project Summary
 
-Generate project-level statistics including:
+Generate project-wide statistics including:
 
 - Total Files
 - Total Lines
@@ -202,58 +124,79 @@ Generate project-level statistics including:
 - Total Classes
 - Total Functions
 - Total Methods
+- Overall Project Health
 
 ---
 
 # Current Architecture
 
 ```text
-                    User Upload
+                        User
                          │
                          ▼
-                 Authentication
+                 JWT Authentication
                          │
                          ▼
-                   Upload Service
+                 Project Upload API
                          │
                          ▼
                   ZIP Extraction
                          │
                          ▼
-                  Python File Scanner
+                Python File Scanner
+                         │
+                         ▼
+                  Module Indexer
                          │
                          ▼
                     AST Parser
                          │
+         ┌───────────────┼────────────────┐
+         ▼               ▼                ▼
+ Metrics Engine   Dependency Analyzer   Complexity Analyzer
+         │               │                │
+         └───────────────┼────────────────┘
                          ▼
-                  Metrics Engine
+             Maintainability Analyzer
+                         │
+                         ▼
+            Dependency Graph Builder
+                         │
+                         ▼
+                 Graph Analyzer
                          │
                          ▼
                  Project Summary
                          │
                          ▼
-                 Structured JSON API
+               Structured JSON Response
 ```
 
 ---
 
 # Technology Stack
 
-### Backend
+## Backend
 
 - FastAPI
 - Python 3
 - SQLAlchemy
 - Alembic
 - MySQL
+- Pydantic
 
-### Security
+---
+
+## Security
 
 - JWT Authentication
 - OAuth2
-- Password Hashing
+- Passlib
+- bcrypt
 
-### Static Analysis
+---
+
+## Static Analysis
 
 - Python AST
 - pathlib
@@ -261,24 +204,44 @@ Generate project-level statistics including:
 
 ---
 
-# Example Response
+## Upcoming AI Stack
+
+- Scikit-learn
+- NetworkX
+- Hugging Face Transformers
+- OpenAI API / LLM Integration
+
+---
+
+# Example API Response
 
 ```json
 {
-  "project": {
-    "project_name": "Sample"
-  },
   "summary": {
-    "total_files": 4,
-    "total_lines": 75,
-    "total_classes": 2,
-    "total_functions": 10
+    "total_files": 7,
+    "total_lines": 79,
+    "project_health": "Excellent"
+  },
+  "dependency_graph": {
+    "main": [
+      "utils.helper",
+      "models.user"
+    ]
+  },
+  "graph_analysis": {
+    "most_connected_module": "main",
+    "circular_dependencies": []
   },
   "analysis": [
     {
-      "file": "models/user.py",
-      "metrics": {
-        "code_lines": 16
+      "file": "main.py",
+      "complexity": {
+        "cyclomatic_complexity": 2,
+        "risk": "Low"
+      },
+      "maintainability": {
+        "index": 88,
+        "rating": "Excellent"
       }
     }
   ]
@@ -287,60 +250,73 @@ Generate project-level statistics including:
 
 ---
 
-# Roadmap
+# Project Roadmap
 
-## v0.1.0 ✅ Static Analysis Foundation
+## ✅ v0.1.0 — Foundation
 
 - JWT Authentication
+- User Management
+- MySQL Integration
 - Project Upload
 - ZIP Extraction
+
+---
+
+## ✅ v0.2.0 — Static Analysis
+
+- Python File Scanner
 - AST Parser
-- Metrics Engine
+- Software Metrics Engine
 - Project Summary
 
 ---
 
-## v0.2.0 🚧 Dependency Analysis
+## ✅ v0.3.0 — Software Intelligence Core
 
-- Internal Module Graph
-- External Dependency Detection
-- Circular Import Detection
-- Dependency Visualization
-
----
-
-## v0.3.0 🚧 Complexity Analysis
-
+- Dependency Analysis
+- Internal & External Dependency Detection
+- Dependency Graph
+- Circular Dependency Detection
+- Graph Analysis
 - Cyclomatic Complexity
-- Maintainability Metrics
-- Function Complexity
-- Class Complexity
+- Maintainability Index
 
 ---
 
-## v0.4.0 🚧 Software Quality
+## 🚧 v0.4.0 — Software Quality
 
 - Code Smell Detection
-- SOLID Principle Analysis
-- Architecture Analysis
 - Technical Debt Detection
+- Quality Score
+- Engineering Priority Score
 
 ---
 
-## v0.5.0 🚧 AI Insights
+## 🚧 v0.5.0 — Architecture Intelligence
 
-- Project Understanding
+- Architecture Detection
+- Layer Detection
+- Design Pattern Detection
+- SOLID Principle Analysis
+
+---
+
+## 🚧 v0.6.0 — AI Insights
+
 - AI Project Summary
 - Refactoring Recommendations
-- Software Architecture Explanation
-- Risk Analysis
+- Architecture Explanation
+- Risk Assessment
+- AI Engineering Chat
 
 ---
 
-## v1.0.0 🚧 Complete Platform
+## 🚧 v1.0.0 — Complete Platform
 
 - React Dashboard
-- Interactive Dependency Graphs
+- Interactive Dependency Graph
+- Visual Analytics
+- PDF Reports
 - GitHub Integration
 - VS Code Extension
 - AI Software Architect
@@ -349,62 +325,101 @@ Generate project-level statistics including:
 
 # How ForgeIQ Differs
 
-Traditional AI coding assistants typically follow this workflow:
+Traditional AI coding assistants follow this workflow:
 
-```
+```text
 Source Code
-     │
-     ▼
+      │
+      ▼
 Large Language Model
-     │
-     ▼
+      │
+      ▼
 Generated Response
 ```
 
 ForgeIQ follows a software engineering pipeline:
 
-```
+```text
 Source Code
-     │
-     ▼
-Static Analysis
-     │
-     ▼
-AST Parsing
-     │
-     ▼
+      │
+      ▼
+Python AST
+      │
+      ▼
 Software Metrics
-     │
-     ▼
-Project Understanding
-     │
-     ▼
+      │
+      ▼
 Dependency Analysis
-     │
-     ▼
-Architecture Analysis
-     │
-     ▼
+      │
+      ▼
+Complexity Analysis
+      │
+      ▼
+Maintainability Analysis
+      │
+      ▼
+Architecture Understanding
+      │
+      ▼
 Artificial Intelligence
-     │
-     ▼
+      │
+      ▼
 Engineering Insights
 ```
 
-This enables AI to generate recommendations based on a structured understanding of the software rather than only the raw source code.
+Instead of asking an AI model to understand thousands of lines of raw code, ForgeIQ first transforms the project into structured engineering knowledge. The AI then reasons over that structured understanding to provide more accurate, architecture-aware recommendations.
+
+---
+
+# Running ForgeIQ
+
+```bash
+git clone https://github.com/<your-username>/ForgeIQ.git
+
+cd ForgeIQ
+
+python -m venv .venv
+
+source .venv/bin/activate
+
+pip install -r requirements.txt
+
+uvicorn app.main:app --reload
+```
+
+Swagger Documentation:
+
+```
+http://127.0.0.1:8000/docs
+```
 
 ---
 
 # Project Status
 
-**Current Version:** `v0.1.0`
+**Current Version:** **v0.3.0**
 
 **Status:** 🟢 Active Development
 
-Milestone 1 has been completed successfully. The project currently focuses on building a robust static analysis engine, which will serve as the foundation for dependency analysis, software quality assessment, and AI-powered engineering insights.
+ForgeIQ currently includes a complete static analysis engine capable of understanding project structure, dependencies, complexity, maintainability, and software metrics. The next milestone focuses on software quality analysis through code smell detection and architecture intelligence.
+
+---
+
+# Future Vision
+
+The long-term goal of ForgeIQ is to become an AI-powered Software Architect capable of:
+
+- Understanding entire software systems
+- Detecting architectural issues
+- Explaining codebases
+- Measuring software quality
+- Prioritizing engineering work
+- Assisting developers with intelligent, project-aware recommendations
+
+Rather than replacing developers, ForgeIQ aims to become an engineering companion that understands software the way an experienced software architect would.
 
 ---
 
 # License
 
-This project is currently under development and is intended for educational and research purposes.
+MIT License
