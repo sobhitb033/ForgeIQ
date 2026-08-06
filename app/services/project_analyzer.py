@@ -5,12 +5,10 @@ from app.services.ast_parser import ASTParser
 from app.services.metrics_engine import MetricsEngine
 from app.services.dependency_analyzer import DependencyAnalyzer
 from app.services.project_summary import ProjectSummary
-
 from app.services.module_indexer import ModuleIndexer
-
 from app.services.dependency_graph_builder import DependencyGraphBuilder
-
 from app.services.graph_analyzer import GraphAnalyzer
+from app.services.maintainability_analyzer import MaintainabilityAnalyzer
 
 
 class ProjectAnalyzer:
@@ -19,8 +17,8 @@ class ProjectAnalyzer:
     def analyze_project(project_path: Path):
 
         python_files = FileScanner.find_python_files(project_path)
+
         project_modules = ModuleIndexer.build(project_path)
-        print(project_modules)
 
         analysis = []
 
@@ -29,13 +27,18 @@ class ProjectAnalyzer:
             # Parse AST once
             ast_data = ASTParser.parse_file(file)
 
-            # Generate metrics
+            # Metrics
             metrics = MetricsEngine.analyze_file(
                 file,
                 ast_data
             )
 
-            # Analyze dependencies
+            # Maintainability
+            maintainability = MaintainabilityAnalyzer.analyze(
+                metrics
+            )
+
+            # Dependencies
             dependencies = DependencyAnalyzer.analyze_file(
                 file,
                 ast_data,
@@ -47,17 +50,22 @@ class ProjectAnalyzer:
                     "file": str(file.relative_to(project_path)),
                     "ast": ast_data,
                     "metrics": metrics,
+                    "maintainability": maintainability,
                     "dependencies": dependencies,
                 }
             )
 
-        # Generate project summary
-        summary = ProjectSummary.generate(analysis)
+        # Project Summary
+        summary = ProjectSummary.generate(
+            analysis
+        )
 
+        # Dependency Graph
         dependency_graph = DependencyGraphBuilder.build(
             analysis
         )
 
+        # Graph Analysis
         graph_analysis = GraphAnalyzer.analyze(
             dependency_graph
         )
