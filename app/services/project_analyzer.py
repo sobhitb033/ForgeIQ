@@ -10,6 +10,8 @@ from app.services.dependency_graph_builder import DependencyGraphBuilder
 from app.services.graph_analyzer import GraphAnalyzer
 from app.services.maintainability_analyzer import MaintainabilityAnalyzer
 
+from app.services.code_smell_analyzer import CodeSmellAnalyzer
+
 
 class ProjectAnalyzer:
 
@@ -38,12 +40,18 @@ class ProjectAnalyzer:
                 metrics
             )
 
-            # Dependencies
             dependencies = DependencyAnalyzer.analyze_file(
                 file,
                 ast_data,
                 project_modules
             )
+
+            code_smells = CodeSmellAnalyzer.analyze(
+                ast_data["tree"]
+            )
+
+            #Remove raw ast data before returning JSON
+            ast_data.pop("tree",None)
 
             analysis.append(
                 {
@@ -52,6 +60,7 @@ class ProjectAnalyzer:
                     "metrics": metrics,
                     "maintainability": maintainability,
                     "dependencies": dependencies,
+                    "code_smells": code_smells,
                 }
             )
 

@@ -13,6 +13,7 @@ class ASTParser:
         tree = ast.parse(source)
 
         return {
+            "tree": tree,
             "imports": ASTParser.extract_imports(tree),
             "classes": ASTParser.extract_classes(tree),
             "functions": ASTParser.extract_functions(tree),
