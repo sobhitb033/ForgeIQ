@@ -13,6 +13,8 @@ from app.services.code_smell_analyzer import CodeSmellAnalyzer
 from app.services.engineering_priority import EngineeringPriority
 from app.services.module_impact_analyzer import ModuleImpactAnalyzer
 from app.services.project_health_analyzer import ProjectHealthAnalyzer
+from app.services.architecture_analyzer import ArchitectureAnalyzer
+from app.services.recommendation_engine import RecommendationEngine
 
 
 class ProjectAnalyzer:
@@ -100,16 +102,20 @@ class ProjectAnalyzer:
         # Calculate engineering priority
         for file_data in analysis:
 
-            file_path = (
-                file_data["file"]
-                .replace("\\", "/")
+            file_path = file_data["file"].replace(
+                "\\", "/"
             )
-            # Convert file path to module name
-            parts = file_path.split("/")[1:]
 
-            module = ".".join(parts).replace(
-                ".py",
-                ""
+            # Remove the top-level project folder
+            relative_path = file_path.split(
+                "/", 1
+            )[-1]
+
+            # Convert path to Python module format
+            module = (
+                relative_path
+                .removesuffix(".py")
+                .replace("/", ".")
             )
 
             # Get module impact
@@ -159,11 +165,26 @@ class ProjectAnalyzer:
                 "module_impact"
             ] = impact_data
 
-        # NOW calculate project health
-        # because engineering_priority now exists
+        # Calculate project health
+        # Engineering priority must exist first
         project_health = ProjectHealthAnalyzer.analyze(
             analysis,
             graph_analysis
+        )
+
+        # Analyze project architecture
+        architecture = ArchitectureAnalyzer.analyze(
+            analysis,
+            dependency_graph,
+            module_impact
+        )
+
+        # Generate recommendations
+        recommendations = RecommendationEngine.generate(
+            analysis,
+            graph_analysis,
+            project_health,
+            architecture
         )
 
         # Generate project summary
@@ -176,5 +197,7 @@ class ProjectAnalyzer:
             "dependency_graph": dependency_graph,
             "graph_analysis": graph_analysis,
             "project_health": project_health,
+            "architecture": architecture,
+            "recommendations": recommendations,
             "files": analysis,
         }

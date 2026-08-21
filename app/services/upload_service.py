@@ -77,5 +77,8 @@ class UploadService:
             "summary": analysis["summary"],
             "dependency_graph": analysis["dependency_graph"],
             "graph_analysis": analysis["graph_analysis"],
-            "analysis": analysis["files"],
+            "project_health": analysis["project_health"],
+            "architecture": analysis["architecture"],
+            "recommendations": analysis["recommendations"],
+            "files": analysis["files"],
         }
