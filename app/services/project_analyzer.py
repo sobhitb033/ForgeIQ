@@ -16,6 +16,8 @@ from app.services.project_health_analyzer import ProjectHealthAnalyzer
 from app.services.architecture_analyzer import ArchitectureAnalyzer
 from app.services.recommendation_engine import RecommendationEngine
 
+from app.services.project_report_generator import ProjectReportGenerator
+
 
 class ProjectAnalyzer:
 
@@ -192,6 +194,16 @@ class ProjectAnalyzer:
             analysis
         )
 
+        #Generate structred project report
+        project_report = ProjectReportGenerator.generate(
+            summary=summary,
+            project_health=project_health,
+            architecture=architecture,
+            graph_analysis=graph_analysis,
+            recommendations=recommendations,
+            analysis=analysis,
+        )
+
         return {
             "summary": summary,
             "dependency_graph": dependency_graph,
@@ -199,5 +211,6 @@ class ProjectAnalyzer:
             "project_health": project_health,
             "architecture": architecture,
             "recommendations": recommendations,
+            "project_report": project_report,
             "files": analysis,
         }
