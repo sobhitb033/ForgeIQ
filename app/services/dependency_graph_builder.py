@@ -9,10 +9,12 @@ class DependencyGraphBuilder:
 
             path = file["file"].replace("\\", "/")
 
-            if path.startswith("Sample/"):
-                path = path[len("Sample/"):]
+            # Remove .py extension
+            if path.endswith(".py"):
+                path = path[:-3]
 
-            module = path.replace("/", ".").replace(".py", "")
+            # Convert file path to Python module format
+            module = path.replace("/", ".")
 
             graph[module] = file["dependencies"]["internal"]
 

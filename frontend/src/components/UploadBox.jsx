@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { uploadProject } from "../services/api";
 
-function UploadBox() {
+function UploadBox({ setAnalysisResult }) {
     const [selectedFile, setSelectedFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
@@ -29,9 +29,12 @@ function UploadBox() {
 
             console.log("Analysis result:", result);
 
+            // Send result to Home.jsx
+            setAnalysisResult(result);
+
         } catch (error) {
             console.error(error);
-            setError(error.message);
+            setError(error.message || "Something went wrong.");
         } finally {
             setLoading(false);
         }
@@ -74,7 +77,10 @@ function UploadBox() {
                         onClick={handleAnalyze}
                         disabled={loading}
                     >
-                        {loading ? "Analyzing..." : "Analyze Project"}
+                        {loading
+                            ? "Analyzing..."
+                            : "Analyze Project"
+                        }
                     </button>
 
                     {error && (

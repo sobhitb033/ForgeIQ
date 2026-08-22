@@ -1,21 +1,19 @@
-import "./Navbar.css";
-
 function Navbar() {
     return (
         <nav className="navbar">
             <div className="nav-container">
                 <div className="logo">
-                    <span className="logo-mark">◈</span>
-                    <span className="logo-text">ForgeIQ</span>
+                    <div className="logo-icon">⚡</div>
+
+                    <div className="logo-text">
+                        ForgeIQ
+                    </div>
                 </div>
 
-                <div className="nav-links">
-                    <a href="#home">Home</a>
-                    <a href="#analyze">Analyze</a>
-                    <a href="#about">About</a>
+                <div className="nav-right">
+                    <span className="status-dot"></span>
+                    <span>AI Project Analyzer</span>
                 </div>
-
-                <button className="nav-button">Analyze Project</button>
             </div>
         </nav>
     );
