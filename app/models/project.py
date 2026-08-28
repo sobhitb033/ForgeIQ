@@ -44,3 +44,9 @@ class Project(Base):
         "User",
         back_populates="projects",
     )
+
+    source_files = relationship(
+        "SourceFile",
+        back_populates="project",
+        cascade="all, delete-orphan",
+    )

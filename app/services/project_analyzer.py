@@ -109,9 +109,7 @@ class ProjectAnalyzer:
             )
 
             # Remove the top-level project folder
-            relative_path = file_path.split(
-                "/", 1
-            )[-1]
+            relative_path = file_path
 
             # Convert path to Python module format
             module = (

@@ -16,6 +16,7 @@ class ProjectService:
         project = Project(
             project_name=project_name,
             upload_path="",
+            status="Uploaded",
             user_id=current_user.id,
         )
 
@@ -25,6 +26,7 @@ class ProjectService:
 
         return project
 
+
     @staticmethod
     def update_upload_path(
         db: Session,
@@ -33,6 +35,21 @@ class ProjectService:
     ):
 
         project.upload_path = upload_path
+
+        db.commit()
+        db.refresh(project)
+
+        return project
+
+
+    @staticmethod
+    def update_status(
+        db: Session,
+        project: Project,
+        status: str,
+    ):
+
+        project.status = status
 
         db.commit()
         db.refresh(project)
