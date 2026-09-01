@@ -9,6 +9,8 @@ from app.models.user import User
 from app.services.project_service import ProjectService
 from app.services.project_analyzer import ProjectAnalyzer
 from app.services.source_file_service import SourceFileService
+from app.services.project_analysis_service import ProjectAnalysisService
+from app.services.recommendation_service import RecommendationService
 
 
 UPLOAD_DIR = Path("uploads")
@@ -114,6 +116,21 @@ class UploadService:
                 )
             )
 
+            RecommendationService.save_recommendations(
+                db=db,
+                project=project,
+                recommendations=analysis["recommendations"],
+            )
+
+            #Save project analysis to db
+            project_analysis = (
+                ProjectAnalysisService.save_analysis(
+                    db=db,
+                    project=project,
+                    analysis=analysis,
+                )
+            )
+
             SourceFileService.save_source_files(
                 db=db,
                 project=project,
@@ -146,6 +163,16 @@ class UploadService:
 
                     "uploaded_at":
                         project.uploaded_at,
+                },
+
+                "analysis": {
+                    "id": project_analysis.id,
+                    "health_score": project_analysis.health_score,
+                    "health_status": project_analysis.health_status,
+                    "architecture_type": project_analysis.architecture_type,
+                    "total_dependencies": project_analysis.total_dependencies,
+                    "circular_dependencies": project_analysis.circular_dependencies,
+                    "analyzed_at": project_analysis.analyzed_at,
                 },
 
                 "summary":

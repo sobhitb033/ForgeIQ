@@ -18,6 +18,8 @@ from app.services.recommendation_engine import RecommendationEngine
 
 from app.services.project_report_generator import ProjectReportGenerator
 
+from app.services.recommendation_summary import RecommendationSummary
+
 
 class ProjectAnalyzer:
 
@@ -187,6 +189,10 @@ class ProjectAnalyzer:
             architecture
         )
 
+        recommendation_summary = RecommendationSummary.generate(
+            recommendations
+        )
+
         # Generate project summary
         summary = ProjectSummary.generate(
             analysis
@@ -211,4 +217,5 @@ class ProjectAnalyzer:
             "recommendations": recommendations,
             "project_report": project_report,
             "files": analysis,
+            "recommendation_summary": recommendation_summary,
         }

@@ -50,3 +50,15 @@ class Project(Base):
         back_populates="project",
         cascade="all, delete-orphan",
     )
+
+    analysis = relationship(
+        "ProjectAnalysis",
+        back_populates="project",
+        cascade="all, delete",
+    )
+
+    recommendations = relationship(
+        "Recommendation",
+        back_populates="project",
+        cascade="all, delete",
+    )
