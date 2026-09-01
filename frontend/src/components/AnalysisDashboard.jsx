@@ -1,7 +1,6 @@
+import FileAnalysis from "./FileAnalysis";
+
 function AnalysisDashboard({ data }) {
-    /* ============================= */
-    /* SAFE DATA EXTRACTION */
-    /* ============================= */
 
     const summary = data?.summary || {};
 
@@ -17,18 +16,9 @@ function AnalysisDashboard({ data }) {
     const recommendations =
         data?.recommendations || [];
 
-
-    /* ============================= */
-    /* ARCHITECTURE */
-    /* ============================= */
-
     const coreModules =
         architecture?.core_modules || [];
 
-
-    /* ============================= */
-    /* DEPENDENCY ANALYSIS */
-    /* ============================= */
 
     const mostConnectedModule =
         graphAnalysis?.most_connected_module ||
@@ -51,11 +41,6 @@ function AnalysisDashboard({ data }) {
             graphAnalysis?.cycles?.length ??
             0;
 
-
-    /* ============================= */
-    /* PROJECT HEALTH */
-    /* ============================= */
-
     const healthScore =
         projectHealth?.score ??
         data?.health_score ??
@@ -68,9 +53,6 @@ function AnalysisDashboard({ data }) {
         "Unknown";
 
 
-    /* ============================= */
-    /* HELPER FUNCTION */
-    /* ============================= */
 
     const formatModuleName = (module) => {
 
@@ -86,10 +68,6 @@ function AnalysisDashboard({ data }) {
 
         <section className="dashboard">
 
-
-            {/* ============================= */}
-            {/* PROJECT ANALYSIS HEADER */}
-            {/* ============================= */}
 
             <div className="dashboard-header">
 
@@ -110,11 +88,6 @@ function AnalysisDashboard({ data }) {
                 </div>
 
             </div>
-
-
-            {/* ============================= */}
-            {/* PROJECT HEALTH */}
-            {/* ============================= */}
 
             <section className="health-card">
 
@@ -150,11 +123,6 @@ function AnalysisDashboard({ data }) {
                 </div>
 
             </section>
-
-
-            {/* ============================= */}
-            {/* PROJECT OVERVIEW */}
-            {/* ============================= */}
 
             <section className="dashboard-section">
 
@@ -207,10 +175,6 @@ function AnalysisDashboard({ data }) {
 
             </section>
 
-
-            {/* ============================= */}
-            {/* ARCHITECTURE */}
-            {/* ============================= */}
 
             <section className="dashboard-section">
 
@@ -347,10 +311,6 @@ function AnalysisDashboard({ data }) {
             </section>
 
 
-            {/* ============================= */}
-            {/* DEPENDENCY ANALYSIS */}
-            {/* ============================= */}
-
             <section className="dashboard-section">
 
                 <div className="section-heading">
@@ -396,11 +356,6 @@ function AnalysisDashboard({ data }) {
                 </div>
 
             </section>
-
-
-            {/* ============================= */}
-            {/* RECOMMENDATIONS */}
-            {/* ============================= */}
 
             <section className="dashboard-section">
 
@@ -526,16 +481,15 @@ function AnalysisDashboard({ data }) {
 
             </section>
 
+            <FileAnalysis
+                files={data.files}
+            />
+
         </section>
 
     );
 
 }
-
-
-/* ================================= */
-/* REUSABLE STAT CARD */
-/* ================================= */
 
 function StatCard({
     title,
