@@ -1,0 +1,41 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: forgeiq-db
+    restart: unless-stopped
+
+    environment:
+      MYSQL_DATABASE: forgeiq
+      MYSQL_USER: forgeiq
+      MYSQL_PASSWORD: forgeiq_password
+      MYSQL_ROOT_PASSWORD: root_password
+
+    ports:
+      - "3307:3306"
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: forgeiq-backend
+    restart: unless-stopped
+
+    ports:
+      - "8000:8000"
+
+    env_file:
+      - .env.docker
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
