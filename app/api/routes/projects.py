@@ -17,6 +17,8 @@ from app.models.recommendation import Recommendation
 from app.services.project_service import ProjectService
 from app.services.upload_service import UploadService
 
+from app.core.security import get_current_user
+
 
 router = APIRouter(
     prefix="/projects",
@@ -27,9 +29,8 @@ router = APIRouter(
 @router.post("/test")
 def create_test_project(
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-
-    current_user = db.query(User).first()
 
     return ProjectService.create_project(
         db=db,
@@ -42,9 +43,8 @@ def create_test_project(
 async def upload_project(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-
-    current_user = db.query(User).first()
 
     return await UploadService.upload_project(
         file=file,
@@ -57,11 +57,15 @@ async def upload_project(
 def get_recommendation_summary(
     project_id: int,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
 
     project = (
         db.query(Project)
-        .filter(Project.id == project_id)
+        .filter(
+            Project.id == project_id,
+            Project.user_id == current_user.id,
+        )
         .first()
     )
 
@@ -127,9 +131,7 @@ def get_recommendation_summary(
     return {
         "project_id": project.id,
         "project_name": project.project_name,
-        "total_recommendations": len(
-            recommendations
-        ),
+        "total_recommendations": len(recommendations),
         "priority_summary": priority_summary,
         "top_recommendations": top_recommendations,
     }

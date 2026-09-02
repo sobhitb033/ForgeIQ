@@ -8,3 +8,32 @@ body,
 body {
   margin: 0;
 }
+
+.google-login-section {
+  margin-top: 20px;
+}
+
+
+.google-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  color: #888;
+  font-size: 13px;
+}
+
+
+.google-divider::before,
+.google-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: #ddd;
+}
+
+
+.google-signin-button {
+  display: flex;
+  justify-content: center;
+}

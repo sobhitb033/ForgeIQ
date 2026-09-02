@@ -19,28 +19,51 @@ class DependencyAnalyzer:
             if not imported_module:
                 continue
 
-            # Check if the import directly matches
-            if imported_module in project_modules:
+            imported_module = imported_module.strip()
 
+            # 1. Exact match
+            
+            if imported_module in project_modules:
                 internal.append(imported_module)
                 continue
 
-            # Check whether the imported module is a parent
-            # or child of a project module
-            is_internal = any(
-                module.startswith(imported_module + ".")
-                or imported_module.startswith(module + ".")
-                for module in project_modules
-            )
+            # 2. Match short/local imports against full module names.
 
-            if is_internal:
-                internal.append(imported_module)
-            else:
-                external.append(imported_module)
+            matching_modules = [
+                module
+                for module in project_modules
+                if module.endswith("." + imported_module)
+            ]
+
+            if len(matching_modules) == 1:
+                internal.append(matching_modules[0])
+                continue
+
+            # 3. Handle package/parent imports.
+
+            parent_matches = [
+                module
+                for module in project_modules
+                if module.endswith("." + imported_module)
+                or module.startswith(imported_module + ".")
+            ]
+
+            if parent_matches:
+                parent_matches.sort(key=len)
+                internal.append(parent_matches[0])
+                continue
+
+            # 4. Otherwise it is an external dependency.
+
+            external.append(imported_module)
+
+        # Remove duplicates
+        internal = list(set(internal))
+        external = list(set(external))
 
         return {
-            "internal": list(set(internal)),
-            "external": list(set(external)),
-            "total_internal": len(set(internal)),
-            "total_external": len(set(external)),
+            "internal": internal,
+            "external": external,
+            "total_internal": len(internal),
+            "total_external": len(external),
         }

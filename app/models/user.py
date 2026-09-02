@@ -53,3 +53,9 @@ class User(Base):
         back_populates="owner",
         cascade="all, delete",
     )
+
+    password_reset_otps = relationship(
+        "PasswordResetOTP",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )

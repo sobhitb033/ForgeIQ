@@ -32,3 +32,10 @@ app.include_router(projects_router)
 @app.get("/")
 def root():
     return {"message": "Welcome to ForgeIQ API!"}
+
+@app.get("/health")
+def health_check():
+    return {
+	    "status": "healthy",
+	    "service": "ForgeIQ API",
+	}

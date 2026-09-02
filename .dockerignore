@@ -1,37 +1,67 @@
 # Git
 .git
 .gitignore
+.github
 
 # Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
 .venv/
 venv/
 env/
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+ENV/
 
-# Environment
+# Environment files
 .env
+.env.*
+!.env.example
+
+# IDE / editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+
+# Python test / coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Logs
+*.log
+logs/
+
+# Uploaded project data
+uploads/
 
 # Frontend dependencies
 frontend/node_modules/
 frontend/dist/
 
-# Uploads
-uploads/
+# Build / cache
+dist/
+build/
+.cache/
+.parcel-cache/
 
-# IDE
-.vscode/
-.idea/
+# Node
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
 
-# OS
-.DS_Store
+# Docker
+Dockerfile*
+docker-compose*.yml
 
-# Testing / coverage
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Logs
-*.log
+# Documentation / local files
+README.local.md

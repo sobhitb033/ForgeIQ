@@ -1,3 +1,4 @@
+import { uploadProject } from "../services/api";
 import { useState } from "react";
 import AnalysisDashboard from "../components/AnalysisDashboard";
 
@@ -34,27 +35,12 @@ function Home() {
             setError("");
             setAnalysisResult(null);
 
-            const formData = new FormData();
-
-            formData.append("file", selectedFile);
-
-            const response = await fetch(
-                "http://127.0.0.1:8000/projects/upload",
-                {
-                    method: "POST",
-                    body: formData,
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error("Failed to analyze project.");
-            }
-
-            const data = await response.json();
+            const data = await uploadProject(selectedFile);
 
             console.log("Analysis Result:", data);
 
             setAnalysisResult(data);
+
         } catch (err) {
             console.error(err);
 
@@ -62,6 +48,7 @@ function Home() {
                 err.message ||
                 "Something went wrong while analyzing the project."
             );
+
         } finally {
             setLoading(false);
         }
