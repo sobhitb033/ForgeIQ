@@ -1583,6 +1583,63 @@ body {
 }
 
 
+
+/* ================= PASSWORD VISIBILITY TOGGLE ================= */
+
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute !important;
+  top: 50%;
+  right: 10px;
+
+  width: 34px;
+  height: 34px;
+
+  margin: 0 !important;
+  padding: 0 !important;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform: translateY(-50%);
+
+  border: none !important;
+  border-radius: 8px !important;
+
+  background: transparent !important;
+
+  color: #9ca3b8 !important;
+
+  font-size: 19px !important;
+  font-weight: 500 !important;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  opacity: 0.8;
+}
+
+.password-toggle:hover {
+  background: rgba(124, 108, 255, 0.12) !important;
+  color: #c8c3ff !important;
+  opacity: 1;
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #7b68ff;
+  outline-offset: 2px;
+}
+
 /* ================= LOGOUT BUTTON ================= */
 
 .logout-button {

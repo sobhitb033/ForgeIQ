@@ -1,156 +1,28 @@
-import { uploadProject } from "../services/api";
-import { useState } from "react";
+import { useCallback,useEffect,useMemo,useRef,useState } from "react";
 import AnalysisDashboard from "../components/AnalysisDashboard";
+import { deleteProject,getProject,getProjects,uploadProject } from "../services/api";
+import "./Workspace.css";
 
-function Home() {
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [analysisResult, setAnalysisResult] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
-    const handleFileChange = (e) => {
-        const file = e.target.files[0];
-
-        if (!file) return;
-
-        if (!file.name.endsWith(".zip")) {
-            setError("Please select a ZIP file.");
-            setSelectedFile(null);
-            return;
-        }
-
-        setSelectedFile(file);
-        setError("");
-        setAnalysisResult(null);
-    };
-
-    const handleAnalyze = async () => {
-        if (!selectedFile) {
-            setError("Please select a ZIP file first.");
-            return;
-        }
-
-        try {
-            setLoading(true);
-            setError("");
-            setAnalysisResult(null);
-
-            const data = await uploadProject(selectedFile);
-
-            console.log("Analysis Result:", data);
-
-            setAnalysisResult(data);
-
-        } catch (err) {
-            console.error(err);
-
-            setError(
-                err.message ||
-                "Something went wrong while analyzing the project."
-            );
-
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    return (
-        <main className="home">
-            {/* HERO */}
-
-            <section className="hero">
-                <div className="hero-content">
-                    <div className="hero-badge">
-                        AI-POWERED CODE ANALYSIS
-                    </div>
-
-                    <h1>
-                        Understand your project.
-                        <br />
-                        <span>Improve your code.</span>
-                    </h1>
-
-                    <p>
-                        Upload your project and let ForgeIQ analyze its
-                        structure, architecture, dependencies, and code quality.
-                    </p>
-                </div>
-            </section>
-
-            {/* UPLOAD */}
-
-            <section className="upload-section">
-                <div className="upload-box">
-                    <div className="upload-icon">
-                        ↑
-                    </div>
-
-                    <h2>Upload your project</h2>
-
-                    <p>
-                        Drag and drop a ZIP file here, or click to browse.
-                    </p>
-
-                    <div className="file-actions">
-                        <label className="file-button">
-                            Choose file
-
-                            <input
-                                type="file"
-                                accept=".zip"
-                                onChange={handleFileChange}
-                            />
-                        </label>
-
-                        <span className="file-name">
-                            {selectedFile
-                                ? selectedFile.name
-                                : "No file selected"}
-                        </span>
-                    </div>
-
-                    {error && (
-                        <p className="error-message">
-                            {error}
-                        </p>
-                    )}
-
-                    <button
-                        className="analyze-button"
-                        onClick={handleAnalyze}
-                        disabled={!selectedFile || loading}
-                    >
-                        {loading
-                            ? "Analyzing Project..."
-                            : "Analyze Project"}
-                    </button>
-                </div>
-            </section>
-
-            {/* LOADING */}
-
-            {loading && (
-                <div className="loading-container">
-                    <div className="loader"></div>
-
-                    <h3>Analyzing your project...</h3>
-
-                    <p>
-                        Inspecting files, architecture, dependencies,
-                        and code quality.
-                    </p>
-                </div>
-            )}
-
-            {/* RESULTS */}
-
-            {analysisResult && !loading && (
-                <AnalysisDashboard
-                    data={analysisResult}
-                />
-            )}
-        </main>
-    );
+function Home({onLogout}) {
+  const [projects,setProjects]=useState([]),[selectedProjectId,setSelectedProjectId]=useState(null),[projectData,setProjectData]=useState(null);
+  const [selectedFile,setSelectedFile]=useState(null),[loadingProjects,setLoadingProjects]=useState(true),[loadingProject,setLoadingProject]=useState(false),[uploading,setUploading]=useState(false),[error,setError]=useState(""),[search,setSearch]=useState("");
+  const fileRef=useRef(null),uploadRef=useRef(null);
+  const loadProjects=useCallback(async(preferredId=null)=>{try{setLoadingProjects(true);setError("");const r=await getProjects();setProjects(r);if(!r.length){setSelectedProjectId(null);setProjectData(null);return;}const id=preferredId??(r.some(p=>p.id===selectedProjectId)?selectedProjectId:r[0].id);setSelectedProjectId(id);}catch(e){setError(e.message||"Failed to load project history.")}finally{setLoadingProjects(false)}},[selectedProjectId]);
+  const loadProject=useCallback(async(id)=>{if(!id)return;try{setLoadingProject(true);setError("");setProjectData(await getProject(id));}catch(e){setError(e.message||"Failed to load project.")}finally{setLoadingProject(false)}},[]);
+  useEffect(()=>{loadProjects()},[]); useEffect(()=>{if(selectedProjectId)loadProject(selectedProjectId)},[selectedProjectId,loadProject]);
+  const filtered=useMemo(()=>{const q=search.trim().toLowerCase();return q?projects.filter(p=>p.project_name?.toLowerCase().includes(q)):projects},[projects,search]);
+  const analysis=useMemo(()=>{if(!projectData)return null;const s=projectData.analysis_snapshot,a=projectData.analysis||{};if(s&&typeof s==="object")return {...s,health_score:s.health_score??a.health_score??0,health_status:s.health_status??a.health_status??"Unknown",project_name:projectData.project?.project_name};return {summary:{},dependency_graph:{},graph_analysis:{},project_health:{score:a.health_score??0,status:a.health_status??"Unknown"},architecture:{architecture_type:a.architecture_type??"Unknown"},recommendations:projectData.recommendations||[],files:projectData.source_files||[],health_score:a.health_score??0,health_status:a.health_status??"Unknown",project_name:projectData.project?.project_name};},[projectData]);
+  const startNew=()=>{setSelectedProjectId(null);setProjectData(null);setSelectedFile(null);setError("");setTimeout(()=>uploadRef.current?.scrollIntoView({behavior:"smooth",block:"start"}),0)};
+  const choose=e=>{const f=e.target.files?.[0];if(!f)return;if(!f.name.toLowerCase().endsWith(".zip")){setError("Please select a ZIP file.");setSelectedFile(null);return}setSelectedFile(f);setError("")};
+  const analyze=async()=>{if(!selectedFile){setError("Please select a ZIP file first.");return}try{setUploading(true);setError("");const r=await uploadProject(selectedFile),id=r?.project?.id;setSelectedFile(null);if(fileRef.current)fileRef.current.value="";await loadProjects(id);if(id){setSelectedProjectId(id);setProjectData(r)}}catch(e){setError(e.message||"Something went wrong while analyzing the project.")}finally{setUploading(false)}};
+  const remove=async p=>{if(!window.confirm(`Delete "${p.project_name}"?\n\nThis will permanently remove the project and its saved analysis.`))return;try{setError("");await deleteProject(p.id);const left=projects.filter(x=>x.id!==p.id);setProjects(left);if(!left.length){setSelectedProjectId(null);setProjectData(null)}else setSelectedProjectId(left[0].id)}catch(e){setError(e.message||"Failed to delete the project.")}};
+  const selected=projects.find(p=>p.id===selectedProjectId); const date=v=>v?new Date(v).toLocaleDateString(undefined,{day:"2-digit",month:"short",year:"numeric"}):"";
+  return <div className="workspace-shell">
+    <header className="workspace-topbar"><div className="workspace-brand"><div className="workspace-logo">⚡</div><div><div className="workspace-brand-name">ForgeIQ</div><div className="workspace-brand-subtitle">AI Software Architect</div></div></div><div className="workspace-topbar-right"><span className="workspace-live"><span className="workspace-live-dot"/>Analysis Engine Online</span><button className="workspace-logout" onClick={onLogout}>Logout</button></div></header>
+    <div className="workspace-layout">
+      <aside className="workspace-sidebar"><div className="sidebar-heading-row"><div><span className="sidebar-label">WORKSPACE</span><h2>Projects</h2></div><button className="new-project-icon" onClick={startNew}>+</button></div><button className="new-project-button" onClick={startNew}>＋ New Project</button><div className="project-search-wrapper"><span>⌕</span><input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Search projects..."/></div><div className="project-list">{loadingProjects?<div className="sidebar-empty"><span className="mini-spinner"/>Loading projects...</div>:filtered.length?filtered.map(p=><button key={p.id} className={`project-item ${selectedProjectId===p.id?"active":""}`} onClick={()=>{setSelectedProjectId(p.id);setError("")}}><span className="project-item-icon">{selectedProjectId===p.id?"◆":"◇"}</span><span className="project-item-info"><strong>{p.project_name}</strong><small>{p.status||"Uploaded"}{p.uploaded_at?` · ${date(p.uploaded_at)}`:""}</small></span>{p.status==="Completed"&&<span className="project-health-dot"/>}</button>):<div className="sidebar-empty">{search?"No matching projects.":"No projects yet."}</div>}</div><div className="sidebar-footer"><div className="sidebar-footer-icon">IQ</div><div><strong>ForgeIQ Workspace</strong><span>Persistent project history</span></div></div></aside>
+      <main className="workspace-main">{error&&<div className="workspace-error"><span>!</span>{error}</div>}{loadingProject?<div className="workspace-loading"><div className="workspace-spinner"/><h2>Restoring project workspace...</h2><p>Loading the saved analysis snapshot.</p></div>:analysis?<><div className="project-toolbar"><div><span className="project-toolbar-tag">SAVED PROJECT</span><h1>{projectData?.project?.project_name||"Project"}</h1><p>{projectData?.project?.status==="Completed"?"Analysis restored from your saved ForgeIQ workspace.":"Project analysis workspace"}</p></div><button className="toolbar-delete" onClick={()=>remove(selected||{id:selectedProjectId,project_name:projectData?.project?.project_name||"this project"})}>Delete Project</button></div><AnalysisDashboard data={analysis}/></>:<section className="workspace-new-project" ref={uploadRef}><div className="new-project-hero"><div className="new-project-orb">⚡</div><span className="project-toolbar-tag">NEW ANALYSIS</span><h1>Analyze a new project</h1><p>Upload a ZIP and ForgeIQ will inspect your codebase, architecture, dependencies, and code quality.</p></div><div className="workspace-upload-card"><div className="workspace-upload-icon">↑</div><h2>Upload your project</h2><p>Choose a <strong>.zip</strong> archive of your project.</p><div className="workspace-file-row"><button className="workspace-choose-button" onClick={()=>fileRef.current?.click()}>Choose ZIP</button><span>{selectedFile?selectedFile.name:"No file selected"}</span><input ref={fileRef} type="file" accept=".zip" onChange={choose} hidden/></div><button className="workspace-analyze-button" onClick={analyze} disabled={!selectedFile||uploading}>{uploading?"Analyzing Project...":"Analyze Project →"}</button>{uploading&&<div className="upload-progress-copy">Inspecting files, dependencies, architecture, and code quality...</div>}</div></section>}</main>
+    </div>
+  </div>;
 }
-
 export default Home;

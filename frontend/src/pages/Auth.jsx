@@ -27,6 +27,9 @@ function Auth({ onLogin }) {
     const [fullName, setFullName] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [otp, setOtp] = useState("");
 
     const [loading, setLoading] = useState(false);
@@ -155,6 +158,9 @@ function Auth({ onLogin }) {
         setPassword("");
         setConfirmPassword("");
         setOtp("");
+
+        setShowPassword(false);
+        setShowConfirmPassword(false);
 
     };
 
@@ -537,18 +543,46 @@ function Auth({ onLogin }) {
                                 Password
                             </label>
 
-                            <input
-                                id="login-password"
-                                type="password"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={(event) =>
-                                    setPassword(event.target.value)
-                                }
-                                autoComplete="current-password"
-                                minLength={8}
-                                required
-                            />
+                            <div className="password-input-wrapper">
+
+                                <input
+                                    id="login-password"
+                                    type={
+                                        showPassword
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    placeholder="Enter your password"
+                                    value={password}
+                                    onChange={(event) =>
+                                        setPassword(event.target.value)
+                                    }
+                                    autoComplete="current-password"
+                                    minLength={8}
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    className="password-toggle"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    aria-label={
+                                        showPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                    title={
+                                        showPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                >
+                                    {showPassword ? "◉" : "◌"}
+                                </button>
+
+                            </div>
 
 
                             <div className="forgot-password-link">
@@ -668,36 +702,94 @@ function Auth({ onLogin }) {
                                 Password
                             </label>
 
-                            <input
-                                id="register-password"
-                                type="password"
-                                placeholder="Enter your password"
-                                value={password}
-                                onChange={(event) =>
-                                    setPassword(event.target.value)
-                                }
-                                autoComplete="new-password"
-                                minLength={8}
-                                required
-                            />
+                            <div className="password-input-wrapper">
+
+                                <input
+                                    id="register-password"
+                                    type={
+                                        showPassword
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    placeholder="Enter your password"
+                                    value={password}
+                                    onChange={(event) =>
+                                        setPassword(event.target.value)
+                                    }
+                                    autoComplete="new-password"
+                                    minLength={8}
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    className="password-toggle"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    aria-label={
+                                        showPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                    title={
+                                        showPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                >
+                                    {showPassword ? "◉" : "◌"}
+                                </button>
+
+                            </div>
 
 
                             <label htmlFor="register-confirm-password">
                                 Confirm Password
                             </label>
 
-                            <input
-                                id="register-confirm-password"
-                                type="password"
-                                placeholder="Re-enter your password"
-                                value={confirmPassword}
-                                onChange={(event) =>
-                                    setConfirmPassword(event.target.value)
-                                }
-                                autoComplete="new-password"
-                                minLength={8}
-                                required
-                            />
+                            <div className="password-input-wrapper">
+
+                                <input
+                                    id="register-confirm-password"
+                                    type={
+                                        showConfirmPassword
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    placeholder="Re-enter your password"
+                                    value={confirmPassword}
+                                    onChange={(event) =>
+                                        setConfirmPassword(event.target.value)
+                                    }
+                                    autoComplete="new-password"
+                                    minLength={8}
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    className="password-toggle"
+                                    onClick={() =>
+                                        setShowConfirmPassword(
+                                            !showConfirmPassword
+                                        )
+                                    }
+                                    aria-label={
+                                        showConfirmPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                    title={
+                                        showConfirmPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                >
+                                    {showConfirmPassword ? "◉" : "◌"}
+                                </button>
+
+                            </div>
 
 
                             {messages}
@@ -901,36 +993,94 @@ function Auth({ onLogin }) {
                                 New Password
                             </label>
 
-                            <input
-                                id="new-password"
-                                type="password"
-                                placeholder="Enter new password"
-                                value={password}
-                                onChange={(event) =>
-                                    setPassword(event.target.value)
-                                }
-                                autoComplete="new-password"
-                                minLength={8}
-                                required
-                            />
+                            <div className="password-input-wrapper">
+
+                                <input
+                                    id="new-password"
+                                    type={
+                                        showPassword
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    placeholder="Enter new password"
+                                    value={password}
+                                    onChange={(event) =>
+                                        setPassword(event.target.value)
+                                    }
+                                    autoComplete="new-password"
+                                    minLength={8}
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    className="password-toggle"
+                                    onClick={() =>
+                                        setShowPassword(!showPassword)
+                                    }
+                                    aria-label={
+                                        showPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                    title={
+                                        showPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                >
+                                    {showPassword ? "◉" : "◌"}
+                                </button>
+
+                            </div>
 
 
                             <label htmlFor="new-confirm-password">
                                 Confirm New Password
                             </label>
 
-                            <input
-                                id="new-confirm-password"
-                                type="password"
-                                placeholder="Re-enter new password"
-                                value={confirmPassword}
-                                onChange={(event) =>
-                                    setConfirmPassword(event.target.value)
-                                }
-                                autoComplete="new-password"
-                                minLength={8}
-                                required
-                            />
+                            <div className="password-input-wrapper">
+
+                                <input
+                                    id="new-confirm-password"
+                                    type={
+                                        showConfirmPassword
+                                            ? "text"
+                                            : "password"
+                                    }
+                                    placeholder="Re-enter new password"
+                                    value={confirmPassword}
+                                    onChange={(event) =>
+                                        setConfirmPassword(event.target.value)
+                                    }
+                                    autoComplete="new-password"
+                                    minLength={8}
+                                    required
+                                />
+
+                                <button
+                                    type="button"
+                                    className="password-toggle"
+                                    onClick={() =>
+                                        setShowConfirmPassword(
+                                            !showConfirmPassword
+                                        )
+                                    }
+                                    aria-label={
+                                        showConfirmPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                    title={
+                                        showConfirmPassword
+                                            ? "Hide password"
+                                            : "Show password"
+                                    }
+                                >
+                                    {showConfirmPassword ? "◉" : "◌"}
+                                </button>
+
+                            </div>
 
 
                             {messages}
