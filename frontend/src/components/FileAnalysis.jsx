@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { openAIFocus } from "./aiFocus";
+import "./AIFocus.css";
 
 function FileAnalysis({ files }) {
     const [selectedFile, setSelectedFile] = useState(null);
@@ -126,6 +128,19 @@ function FileAnalysis({ files }) {
 
 
                             {/* DETAILS BUTTON */}
+
+                            <button
+                                type="button"
+                                className="ai-focus-button"
+                                onClick={() => openAIFocus({
+                                    kind: "module",
+                                    target: fileData.file,
+                                    title: fileData.file || "Source file",
+                                    question: `Why is ${fileData.file || "this file"} important or risky in this project, and what should I change first?`,
+                                })}
+                            >
+                                ✦ Ask AI Architect <span>→</span>
+                            </button>
 
                             <button
                                 className="file-details-button"
@@ -301,6 +316,20 @@ function FileAnalysis({ files }) {
                                                                 "No description available."
                                                             }
                                                         </p>
+
+                                                        <button
+                                                            type="button"
+                                                            className="ai-focus-button"
+                                                            onClick={() => openAIFocus({
+                                                                kind: "smell",
+                                                                target: fileData.file,
+                                                                title: smell.type || "Code smell",
+                                                                smellType: smell.type || "",
+                                                                question: `How should I fix the ${smell.type || "code smell"} in ${fileData.file || "this file"} without introducing regressions?`,
+                                                            })}
+                                                        >
+                                                            ✦ Ask AI Architect <span>→</span>
+                                                        </button>
 
                                                     </div>
 

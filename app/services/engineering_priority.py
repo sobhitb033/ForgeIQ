@@ -8,7 +8,8 @@ class EngineeringPriority:
         dependency_count=0,
         circular_dependency=False,
         fan_in=0,
-        fan_out=0
+        fan_out=0,
+        blast_radius=0
     ):
 
         score = 0
@@ -211,6 +212,36 @@ class EngineeringPriority:
                     "name": "Shared Module",
                     "points": points,
                     "details": f"Fan-in: {fan_in}"
+                }
+            )
+
+        if blast_radius >= 10:
+
+            points = 20
+            score += points
+
+            factors.append(
+                {
+                    "name": "Large Change Blast Radius",
+                    "points": points,
+                    "details": (
+                        f"A change may reach {blast_radius} downstream modules"
+                    )
+                }
+            )
+
+        elif blast_radius >= 5:
+
+            points = 10
+            score += points
+
+            factors.append(
+                {
+                    "name": "Elevated Change Blast Radius",
+                    "points": points,
+                    "details": (
+                        f"A change may reach {blast_radius} downstream modules"
+                    )
                 }
             )
 

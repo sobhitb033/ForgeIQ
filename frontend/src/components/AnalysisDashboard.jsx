@@ -1,4 +1,6 @@
 import FileAnalysis from "./FileAnalysis";
+import { openAIFocus } from "./aiFocus";
+import "./AIFocus.css";
 
 function AnalysisDashboard({ data }) {
 
@@ -272,6 +274,19 @@ function AnalysisDashboard({ data }) {
                                                 </div>
 
 
+                                                <button
+                                                    type="button"
+                                                    className="ai-focus-button"
+                                                    onClick={() => openAIFocus({
+                                                        kind: "module",
+                                                        target: module?.module,
+                                                        title: module?.module || "Core module",
+                                                        question: `Why is ${module?.module || "this module"} considered important in this project, and how should I refactor it safely?`,
+                                                    })}
+                                                >
+                                                    ✦ Ask AI Architect <span>→</span>
+                                                </button>
+
                                                 <div className="module-row">
 
                                                     <span>
@@ -387,7 +402,9 @@ function AnalysisDashboard({ data }) {
                                         ) => (
 
                                             <div
-                                                className="recommendation-card"
+                                                className={`recommendation-card ${
+                                                    recommendation?.priority?.toLowerCase() || "low"
+                                                }`}
                                                 key={index}
                                             >
 
@@ -441,6 +458,19 @@ function AnalysisDashboard({ data }) {
                                                         )
                                                     }
 
+
+                                                    <button
+                                                        type="button"
+                                                        className="ai-focus-button"
+                                                        onClick={() => openAIFocus({
+                                                            kind: "recommendation",
+                                                            target: recommendation?.title,
+                                                            title: recommendation?.title || "Recommendation",
+                                                            question: `Explain this ForgeIQ recommendation and give me a safe implementation approach: ${recommendation?.title || "this recommendation"}.`,
+                                                        })}
+                                                    >
+                                                        ✦ Ask AI Architect <span>→</span>
+                                                    </button>
 
                                                     {
                                                         recommendation?.recommendation && (

@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -9,6 +11,17 @@ from app.models.user import User
 
 
 class ProjectService:
+
+    @staticmethod
+    def _utc_iso(value):
+        """Serialize a database UTC timestamp with an explicit UTC offset."""
+        if value is None:
+            return None
+        if value.tzinfo is None:
+            value = value.replace(tzinfo=timezone.utc)
+        else:
+            value = value.astimezone(timezone.utc)
+        return value.isoformat()
 
     @staticmethod
     def create_project(db: Session, project_name: str, current_user: User):
@@ -64,7 +77,7 @@ class ProjectService:
                 "id": project.id,
                 "project_name": project.project_name,
                 "status": project.status,
-                "uploaded_at": project.uploaded_at,
+                "uploaded_at": ProjectService._utc_iso(project.uploaded_at),
                 "health_score": analysis.health_score if analysis else None,
                 "health_status": analysis.health_status if analysis else None,
                 "architecture_type": analysis.architecture_type if analysis else None,
@@ -112,7 +125,7 @@ class ProjectService:
                 "project_name": project.project_name,
                 "upload_path": project.upload_path,
                 "status": project.status,
-                "uploaded_at": project.uploaded_at,
+                "uploaded_at": ProjectService._utc_iso(project.uploaded_at),
             },
             "analysis": {
                 "id": analysis.id if analysis else None,
@@ -121,7 +134,7 @@ class ProjectService:
                 "architecture_type": analysis.architecture_type if analysis else None,
                 "total_dependencies": analysis.total_dependencies if analysis else 0,
                 "circular_dependencies": analysis.circular_dependencies if analysis else 0,
-                "analyzed_at": analysis.analyzed_at if analysis else None,
+                "analyzed_at": ProjectService._utc_iso(analysis.analyzed_at) if analysis else None,
             },
             "analysis_snapshot": analysis_snapshot,
             "source_files": [
@@ -132,7 +145,7 @@ class ProjectService:
                     "file_type": source_file.file_type,
                     "total_lines": source_file.total_lines,
                     "code_lines": source_file.code_lines,
-                    "created_at": source_file.created_at,
+                    "created_at": ProjectService._utc_iso(source_file.created_at),
                 }
                 for source_file in source_files
             ],
@@ -143,7 +156,7 @@ class ProjectService:
                     "title": recommendation.title,
                     "message": recommendation.message,
                     "recommendation": recommendation.recommendation,
-                    "created_at": recommendation.created_at,
+                    "created_at": ProjectService._utc_iso(recommendation.created_at),
                 }
                 for recommendation in recommendations
             ],

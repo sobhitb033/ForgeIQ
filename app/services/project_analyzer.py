@@ -155,7 +155,8 @@ class ProjectAnalyzer:
                 dependency_count=dependency_count,
                 circular_dependency=circular_dependency,
                 fan_in=impact_data["fan_in"],
-                fan_out=impact_data["fan_out"]
+                fan_out=impact_data["fan_out"],
+                blast_radius=impact_data.get("blast_radius", 0)
             )
 
             # Add results to file analysis
@@ -212,6 +213,7 @@ class ProjectAnalyzer:
             "summary": summary,
             "dependency_graph": dependency_graph,
             "graph_analysis": graph_analysis,
+            "module_impact": module_impact,
             "project_health": project_health,
             "architecture": architecture,
             "recommendations": recommendations,

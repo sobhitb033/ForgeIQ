@@ -700,6 +700,10 @@ body {
 }
 
 .recommendation-card {
+  --severity-color: #8b7cff;
+  --severity-bg: rgba(139, 124, 255, 0.08);
+  --severity-border: rgba(139, 124, 255, 0.22);
+
   display: flex;
 
   gap: 20px;
@@ -708,13 +712,53 @@ body {
 
   border-radius: 18px;
 
-  border:
-    1px solid rgba(120, 130, 190, 0.2);
+  border: 1px solid rgba(120, 130, 190, 0.2);
+  border-left: 3px solid var(--severity-color);
 
   background:
     linear-gradient(145deg,
       #181b31,
       #141729);
+
+  box-shadow: inset 0 0 32px var(--severity-bg);
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.recommendation-card:hover {
+  border-color: var(--severity-border);
+  border-left-color: var(--severity-color);
+  box-shadow:
+    inset 0 0 38px var(--severity-bg),
+    0 12px 30px rgba(0, 0, 0, 0.18);
+  transform: translateY(-2px);
+}
+
+.recommendation-card.critical {
+  --severity-color: #ff5f76;
+  --severity-bg: rgba(255, 95, 118, 0.10);
+  --severity-border: rgba(255, 95, 118, 0.38);
+}
+
+.recommendation-card.high {
+  --severity-color: #ffab63;
+  --severity-bg: rgba(255, 171, 99, 0.08);
+  --severity-border: rgba(255, 171, 99, 0.32);
+}
+
+.recommendation-card.medium {
+  --severity-color: #9a8cff;
+  --severity-bg: rgba(154, 140, 255, 0.07);
+  --severity-border: rgba(154, 140, 255, 0.30);
+}
+
+.recommendation-card.low {
+  --severity-color: #63d9a1;
+  --severity-bg: rgba(99, 217, 161, 0.06);
+  --severity-border: rgba(99, 217, 161, 0.25);
 }
 
 
@@ -733,14 +777,11 @@ body {
 
   border-radius: 50%;
 
-  background:
-    linear-gradient(135deg,
-      #6959df,
-      #8b69ee);
+  background: var(--severity-bg);
+  color: var(--severity-color);
+  border: 1px solid var(--severity-border);
 
-  color: white;
-
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .recommendation-content {
@@ -766,24 +807,21 @@ body {
 }
 
 .priority.high {
-  color: #ff9f66;
-
-  background:
-    rgba(255, 130, 70, 0.12);
+  color: #ffb36f;
+  background: rgba(255, 171, 99, 0.12);
+  border: 1px solid rgba(255, 171, 99, 0.16);
 }
 
 .priority.medium {
-  color: #f6cf5d;
-
-  background:
-    rgba(246, 207, 93, 0.12);
+  color: #a69aff;
+  background: rgba(154, 140, 255, 0.12);
+  border: 1px solid rgba(154, 140, 255, 0.16);
 }
 
 .priority.low {
-  color: #8e95aa;
-
-  background:
-    rgba(140, 150, 170, 0.1);
+  color: #72e0ad;
+  background: rgba(99, 217, 161, 0.10);
+  border: 1px solid rgba(99, 217, 161, 0.14);
 }
 
 .recommendation-content h4 {
