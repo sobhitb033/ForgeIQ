@@ -12,14 +12,6 @@ import {
 
 function Auth({ onLogin }) {
 
-    /*
-     * authMode:
-     * "login"     → normal login
-     * "register"  → create account
-     * "forgot"    → enter email
-     * "otp"       → enter OTP
-     * "reset"     → create new password
-     */
 
     const [authMode, setAuthMode] = useState("login");
 
@@ -434,10 +426,6 @@ function Auth({ onLogin }) {
             setOtp("");
 
 
-            /*
-             * Give the user a moment to see the
-             * success message.
-             */
             setTimeout(() => {
 
                 setAuthMode("login");
@@ -504,8 +492,6 @@ function Auth({ onLogin }) {
 
                 </div>
 
-
-                {/* ================= LOGIN ================= */}
 
                 {authMode === "login" && (
 
@@ -646,8 +632,6 @@ function Auth({ onLogin }) {
                     </>
                 )}
 
-
-                {/* ================= REGISTER ================= */}
 
                 {authMode === "register" && (
 
@@ -828,8 +812,6 @@ function Auth({ onLogin }) {
                 )}
 
 
-                {/* ================= FORGOT PASSWORD ================= */}
-
                 {authMode === "forgot" && (
 
                     <>
@@ -892,8 +874,6 @@ function Auth({ onLogin }) {
                     </>
                 )}
 
-
-                {/* ================= OTP ================= */}
 
                 {authMode === "otp" && (
 
@@ -970,8 +950,6 @@ function Auth({ onLogin }) {
                     </>
                 )}
 
-
-                {/* ================= RESET PASSWORD ================= */}
 
                 {authMode === "reset" && (
 

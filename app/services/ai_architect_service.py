@@ -288,11 +288,6 @@ ForgeIQ analysis context:
             "Content-Type": "application/json",
         }
 
-        # The backend container successfully reaches Gemini with synchronous
-        # httpx.Client, while the previous AsyncClient path intermittently failed
-        # during hostname resolution ([Errno -5]). Keep the FastAPI endpoint async,
-        # but perform the provider I/O in a worker thread using the exact transport
-        # that was verified from inside the container.
         import asyncio
 
         def _request_provider() -> httpx.Response:

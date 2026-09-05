@@ -95,7 +95,6 @@ def forgot_password(
         request.email,
     )
 
-    # Always return the same response.
     # This prevents revealing whether an email is registered.
     return {
         "message": "If an account exists with this email, "

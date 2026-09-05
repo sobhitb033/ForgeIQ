@@ -10,8 +10,6 @@ from app.database.base import Base
 import app.models
 
 # Import all models here so Alembic can detect them
-# Example:
-# from app.models.user import User
 
 config = context.config
 
